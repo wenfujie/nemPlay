@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <button onclick="addUser()">aaa</button>
+  </body>
+</html>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+  function addUser(){
+    console.log(123)
+    $.ajax({
+      type:"POST",
+      url: "/add",
+      data: {name: "wenfujie"},
+      success: function (data) {
+        alert("添加成功")
+      }
+    })
+  }
+</script>
