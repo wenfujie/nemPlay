@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <style>
+        .marginBot{margin-bottom: 15px;}
+    </style>
+</head>
+<body>
+<ul class="nav nav-tabs marginBot">
+    <li role="presentation"><a href="/login">登录</a></li>
+    <li role="presentation" class="active"><a href="/register">注册</a></li>
+    <li role="presentation"><a href="/">首页</a></li>
+</ul>
+<input type="text" class="form-control marginBot" placeholder="输入账号" id="name" oninput="findUser()">
+<input type="text" class="form-control marginBot" placeholder="输入密码" id="psd">
+<button type="button" class="btn btn-default marginBot" onclick="addUser()">注册</button>
+
+</body>
+</html>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    var nameDom = $("#name");
+    var psdDom = $("#psd");
+    var isSameName = false;
+    function addUser(){
+        switch(true){
+            case isSameName:
+                alert("用户名已被使用");
+                return;
+            case !nameDom.val() || !psdDom.val():
+                alert("请填写注册信息！")
+                return
+        }
+        $.ajax({
+            type:"POST",
+            url: "/add",
+            data: {username: nameDom.val(),password:psdDom.val()},
+            success: function (data) {
+                alert(data.message);
+                if(data.code == 200){
+                    location.href = "/login";
+                }
+            }
+        })
+    }
+    function findUser() {
+        $.ajax({
+            type:"POST",
+            url: "/findOne",
+            data: {username: nameDom.val()},
+            success: function (data) {
+                if(data.code == 200){
+                    isSameName = true;
+                    nameDom.css({background:"pink"});
+                }else{
+                    isSameName = false;
+                    nameDom.css({background:"white"});
+                }
+                // alert(data.message);
+            }
+        })
+    }
+
+</script>

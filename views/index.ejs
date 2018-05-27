@@ -1,26 +1,132 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <style>
+      td,th{text-align: center; width: 33.3%;}
+      .operate{color: #00a3e7; cursor: pointer;}
+      .p_r{padding-right: 8px;}
+    </style>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <button onclick="addUser()">aaa</button>
+  <ul class="nav nav-tabs">
+    <li role="presentation"><a href="/login">登录</a></li>
+    <li role="presentation"><a href="/register">注册</a></li>
+    <li role="presentation" class="active"><a href="/">首页</a></li>
+  </ul>
+    <input type="text" id="name">
+    <input type="text" id="psd">
+    <button onclick="addUser()">添加</button>
+    <button onclick="findUser()">查找</button>
+    <button onclick="updateUser()">修改</button>
+    <button onclick="removeUser()">删除</button>
+    <button onclick="findAllUser()">查找所有</button>
+    <button type="button" class="btn btn-default"><a href="/logout">退出</a></button>
+
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">用户信息  当前登录用户：<%= user.username %></div>
+
+    <table class="table">
+      <thead>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>操作</th>
+      </thead>
+      <tbody>
+        <% users.forEach(function (item,index) { %>
+        <tr class="table_tr">
+          <td><%= index+1 %></td>
+          <td><%= item.username %></td>
+          <td>
+            <span class="operate p_r">修改</span>
+            <span class="operate p_r" uname="item.username" onclick="removeUser()">删除</span>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+
+    </table>
+  </div>
   </body>
 </html>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
+  var nameDom = $("#name");
+  var psdDom = $("#psd");
   function addUser(){
-    console.log(123)
     $.ajax({
       type:"POST",
       url: "/add",
-      data: {name: "wenfujie"},
+      data: {username: nameDom.val(),password:psdDom.val()},
       success: function (data) {
-        alert("添加成功")
+          alert(data.message);
+          if(data.code == 200){
+
+          }
       }
     })
   }
+  function findUser() {
+      $.ajax({
+          type:"POST",
+          url: "/findOne",
+          data: {username: nameDom.val(),password:psdDom.val()},
+          success: function (data) {
+              if(data.code == 200){
+                  // todo 跳转页面
+              }else{
+
+              }
+              alert(data.message);
+          }
+      })
+  }
+
+  function findAllUser() {
+      $.ajax({
+          type:"Get",
+          url: "/find",
+          success: function (data) {
+              console.log()
+              if(data.code == 200){
+                  // todo 跳转页面
+                  console.log(data,123)
+              }else{
+
+              }
+              alert(data.message);
+          }
+      })
+  }
+
+  function updateUser() {
+      $.ajax({
+          type:"POST",
+          url: "/update",
+          data: {username: "wenfujie",newName:"wfj"},
+          success: function (data) {
+              if(data.code == 200){
+                  alert(data.message);
+              }
+          }
+      })
+  }
+
+  function removeUser() {
+      $.ajax({
+          type:"POST",
+          url: "/remove",
+          data: {username: nameDom.val()},
+          success: function (data) {
+              if(data.code == 200){
+                  alert(data.message);
+              }
+          }
+      })
+  }
+
+
 </script>

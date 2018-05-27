@@ -5,11 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('./config/mongoose.js');
 var db = mongoose();
+var session = require('express-session');
+var bodyparser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 var indexRouter = require('./routes/index');
 
 var app = express();
 
+// 使用 session 中间件
+app.use(session({
+    secret :  'secret', // 对session id 相关的cookie 进行签名
+    resave : true,
+    saveUninitialized: false, // 是否保存未初始化的会话
+    cookie : {
+        maxAge : 1000 * 60 * 3, // 设置 session 的有效时间，单位毫秒
+    },
+}));
+app.use(cookieParser());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +51,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 
 module.exports = app;
