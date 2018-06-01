@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/User');// 引入模型
+var Songs = require('../models/Song');// 引入模型
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -21,6 +22,7 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req, res, next) {
     res.render("login");
 });
+
 router.get('/register', function(req, res, next) {
     res.render("register");
 });

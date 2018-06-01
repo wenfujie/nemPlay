@@ -8,8 +8,10 @@ var db = mongoose();
 var session = require('express-session');
 var bodyparser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var multer = require('multer');
 
 var indexRouter = require('./routes/index');
+var musicRouter = require('./routes/song');
 
 var app = express();
 
@@ -32,9 +34,12 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// 加载静态资源
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(multer({ dest: './public/music/'}))
 app.use('/', indexRouter);
+app.use("/music",musicRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

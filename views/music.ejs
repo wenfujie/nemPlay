@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>音乐</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+</head>
+<style>
+    .marginBot{margin-bottom: 15px;}
+</style>
+<body>
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="/login">登录</a></li>
+        <li role="presentation"><a href="/register">注册</a></li>
+        <li role="presentation"><a href="/">首页</a></li>
+        <li role="presentation" class="active"><a href="/music">音乐</a></li>
+    </ul>
+    <audio id="audio" src="" controls="controls" width="100%"></audio>
+    <div class="panel panel-default">
+        <div class="panel-heading">歌曲列表  3首歌</div>
+        <table class="table">
+            <thead>
+            <th></th>
+            <th></th>
+            <th>歌曲标题</th>
+            <th>时长</th>
+            </thead>
+            <tbody>
+            <% if(songs && songs.length > 0){ %>
+            <% songs.forEach(function (item,index) { %>
+            <tr class="table_tr">
+                <td><%= index+1 %></td>
+                <td><span onclick="openMusic()" class="glyphicon glyphicon-play-circle openIcon"></span></td>
+                <td><%= item.songName %></td>
+                <td class="song_time_td"><%= item.songTime %></td>
+            </tr>
+            <% }) %>
+            <% } %>
+            </tbody>
+        </table>
+
+        <form method="post" enctype="multipart/form-data" action="/music/file-upload">
+            歌名：<text class="song_name"></text>
+            <input type="file" name="thumbnail" id="fileInput" onchange="uploadFiles()">
+            <input type="submit" class="btn btn-default" value="上传">
+        </form>
+
+    </div>
+</body>
+</html>
+<script src="/plugin/jquery-3.3.1.min.js"></script>
+<script src="/plugin/date.js"></script>
+
+<script>
+    var audio = $("#audio");
+    var allSongs = [];
+    function openMusic(event) {
+        var activeLine = $(arguments.callee.caller.arguments[0].target).parents(".table_tr")[0].rowIndex;
+        console.log(allSongs[activeLine-1],"=========")
+        audio.attr("src","/music/"+allSongs[activeLine-1].songCodeName);
+        console.log(audio,123)
+        audio[0].play();
+    }
+
+    function getAllSongs() {
+        $.ajax({
+            type:"GET",
+            url: "/music/getAllSongs",
+            success: function (data) {
+                if(data.code == 200){
+                    allSongs = data.data;
+                    setSongTimeText(0);
+
+                }
+            }
+        })
+    }
+    // 设置表格中歌曲时间
+    function setSongTimeText(index) {
+        audio.attr("src","/music/"+allSongs[index].songCodeName);//设置audio得src
+        audio[0].load();//加载
+        audio[0].oncanplay = function () {//加载成功函数
+            var songSeconds = audio[0].duration;//获取当前歌曲时长(秒)
+            var songTimeText = parseInt(songSeconds/60,10)+":"+parseInt(songSeconds%60,10);//转换成mm:ss格式
+            $(".song_time_td").eq(index).html(songTimeText);
+            if(allSongs.length > index+1){
+                setSongTimeText(index+1);
+            }
+        }
+    }
+    // 上传音乐
+    function uploadFiles() {
+        var file = $("#fileInput")[0].files[0];
+        if(file){
+            var songDate = new Date(file.size);
+            console.log(file.size,songDate,songDate.getMinutes(),songDate.getSeconds(),"=======")
+            $(".song_name").html(file.name);
+        }
+    }
+
+    $(function () {
+         getAllSongs();
+        //todo 获取不到所点击行数据
+        // $(".openIcon").click((e)=>{
+        //     console.log($(this).parent().prev().html(),123)
+        //     // audio.attr("src",);
+        // });
+
+
+    })
+
+
+
+
+</script>

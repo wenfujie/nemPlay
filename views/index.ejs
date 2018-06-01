@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <style>
       td,th{text-align: center; width: 33.3%;}
+      img{width: 100px; height: 100px;}
       .operate{color: #00a3e7; cursor: pointer;}
       .p_r{padding-right: 8px;}
     </style>
@@ -15,6 +16,7 @@
     <li role="presentation"><a href="/login">登录</a></li>
     <li role="presentation"><a href="/register">注册</a></li>
     <li role="presentation" class="active"><a href="/">首页</a></li>
+    <li role="presentation"><a href="/music">音乐</a></li>
   </ul>
     <input type="text" id="name">
     <input type="text" id="psd">
@@ -24,9 +26,7 @@
     <button onclick="removeUser()">删除</button>
     <button onclick="findAllUser()">查找所有</button>
     <button type="button" class="btn btn-default"><a href="/logout">退出</a></button>
-
   <div class="panel panel-default">
-    <!-- Default panel contents -->
     <div class="panel-heading">用户信息  当前登录用户：<%= user.username %></div>
 
     <table class="table">
@@ -52,7 +52,7 @@
   </div>
   </body>
 </html>
-<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/plugin/jquery-3.3.1.min.js"></script>
 <script>
   var nameDom = $("#name");
   var psdDom = $("#psd");
