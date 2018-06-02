@@ -7,6 +7,9 @@
 </head>
 <style>
     .marginBot{margin-bottom: 15px;}
+    .glyphicon{cursor: pointer;}
+    .openIcon__open{color: #00a3e7;}
+    .upload-btn{margin-top: 5px;}
 </style>
 <body>
     <ul class="nav nav-tabs">
@@ -24,6 +27,7 @@
             <th></th>
             <th>歌曲标题</th>
             <th>时长</th>
+            <th>操作</th>
             </thead>
             <tbody>
             <% if(songs && songs.length > 0){ %>
@@ -33,19 +37,20 @@
                 <td><span onclick="openMusic()" class="glyphicon glyphicon-play-circle openIcon"></span></td>
                 <td><%= item.songName %></td>
                 <td class="song_time_td"><%= item.songTime %></td>
+                <td>
+                    <span onclick="deleteMusic()" class="glyphicon glyphicon-trash deleteIcon"></span>
+                </td>
             </tr>
             <% }) %>
             <% } %>
             </tbody>
         </table>
-
-        <form method="post" enctype="multipart/form-data" action="/music/file-upload">
-            歌名：<text class="song_name"></text>
-            <input type="file" name="thumbnail" id="fileInput" onchange="uploadFiles()">
-            <input type="submit" class="btn btn-default" value="上传">
-        </form>
-
     </div>
+    <form method="post" enctype="multipart/form-data" action="/music/file-upload">
+        歌名：<text class="song_name"></text>
+        <input type="file" name="thumbnail" id="fileInput" onchange="uploadFiles()">
+        <input type="submit" class="btn btn-default upload-btn" value="上传">
+    </form>
 </body>
 </html>
 <script src="/plugin/jquery-3.3.1.min.js"></script>
@@ -54,12 +59,17 @@
 <script>
     var audio = $("#audio");
     var allSongs = [];
+    var activeLine = -1;
     function openMusic(event) {
-        var activeLine = $(arguments.callee.caller.arguments[0].target).parents(".table_tr")[0].rowIndex;
-        console.log(allSongs[activeLine-1],"=========")
+        var activeDom = $(arguments.callee.caller.arguments[0].target);
+        activeLine = activeDom.parents(".table_tr")[0].rowIndex;
+        $(".openIcon").removeClass("openIcon__open");
+        activeDom.addClass("openIcon__open");
         audio.attr("src","/music/"+allSongs[activeLine-1].songCodeName);
-        console.log(audio,123)
         audio[0].play();
+    }
+    function deleteMusic() {
+        
     }
 
     function getAllSongs() {
@@ -100,13 +110,6 @@
 
     $(function () {
          getAllSongs();
-        //todo 获取不到所点击行数据
-        // $(".openIcon").click((e)=>{
-        //     console.log($(this).parent().prev().html(),123)
-        //     // audio.attr("src",);
-        // });
-
-
     })
 
 
